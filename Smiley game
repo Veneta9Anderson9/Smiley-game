@@ -1,0 +1,68 @@
+import pygame
+import random
+
+# Инициализация Pygame
+pygame.init()
+
+# Определение цветов
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+
+# Размер окна
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+
+# Создание окна
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Смайлик съедает гребы")
+
+# Загрузка изображений
+smiley = pygame.image.load("smiley.png")
+smiley = pygame.transform.scale(smiley, (50, 50))
+
+greb = pygame.image.load("greb.png")
+greb = pygame.transform.scale(greb, (30, 30))
+
+# Начальные координаты смайлика и гребов
+smiley_x = SCREEN_WIDTH // 2
+smiley_y = SCREEN_HEIGHT // 2
+greb_x = random.randint(0, SCREEN_WIDTH)
+greb_y = random.randint(0, SCREEN_HEIGHT)
+
+# Функция для отрисовки смайлика и гребов
+def draw_objects():
+    screen.fill(WHITE)
+    screen.blit(smiley, (smiley_x, smiley_y))
+    screen.blit(greb, (greb_x, greb_y))
+    pygame.display.flip()
+
+# Главный игровой цикл
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    # Перемещение смайлика с помощью клавиш
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT]:
+        smiley_x -= 5
+    if keys[pygame.K_RIGHT]:
+        smiley_x += 5
+    if keys[pygame.K_UP]:
+        smiley_y -= 5
+    if keys[pygame.K_DOWN]:
+        smiley_y += 5
+
+    # Проверка, съел ли смайлик греб
+    if (
+        greb_x <= smiley_x <= greb_x + 30
+        and greb_y <= smiley_y <= greb_y + 30
+    ):
+        greb_x = random.randint(0, SCREEN_WIDTH)
+        greb_y = random.randint(0, SCREEN_HEIGHT)
+
+    draw_objects()
+
+# Завершение игры
+pygame.quit()
